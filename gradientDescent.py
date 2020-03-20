@@ -25,7 +25,20 @@ def J():
     return returnVal * .5
 
 #goal is to minimize J()
-#
+# theta := theta + alpha * sum from 1 to n(y ^(i) - h(x^(i))) * x(i)
+# remember, the 1/2 and derivative canceled out to produce x(i)
+convergence=False
+learningRate = 0
+while(not convergence):
+    newThetaJVal = 0
+    for j in range(len(theta)):
+        newThetaJVal + theta[j] #add the current value
+        
+        tempSum=0 #do the sum for the difference between true and predicted vals
+        for i in range(0,5):
+            tempSum += Y_train[i]-h[i]
+        
+        newThetaJVal + learningRate * tempSum * X_train[j][i] #apply learning rate * sum * simplified derivative
 
 #using sklearn libraries
 
