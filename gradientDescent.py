@@ -3,26 +3,37 @@ from sklearn.linear_model import SGDClassifier
 import numpy as np
 
 #batch gradient descent
-X_train = [[2104,1600,2400,1416,3000]] #using living area as X for example
-Y_train = [400,330,369,232,540] #using cost as Y for example
-X_predict = [[1500,2500,4000,1200,6000]] #rando variables
+X_train = np.array([[1,1,1,1,1],[2104,1600,2400,1416,3000], [3,3,3,2,4]]) #using living area as X_1, # bedrooms for X_2. X_0 is defined as the 1 vector
+Y_train = np.array([400,330,369,232,540]) #using cost as Y for example
+X_predict = np.array([[1500,2500,4000,1200,6000],[1,2,3,4,5]]) #rando variables
 
 
-theta=[[0,0]] #initialize it as the zero vector
+theta=np.zeroes(3) #initialize it as the zero vector [0,0,0], x_0 (for the constant theta_0)
 
-#def h(i):
-#    return theta*X_train[0][i]
+#h(x) = theta_0 * x_0 ^ (i) + ... + theta_n * x_n ^ (i), n is the number of features
+def h(i):
+    returnVal=0
+    for j in range(0,len(theta)): #for every subarray, pick out x_train[j][i] and multiply by theta[i], add that to sum
+        returnVal += theta[j] * X_train[j][i]
+    return returnVal
 
-#def J():
-#    sum = 0
-#    for i in range(len(X_train[0])):
-#        sum += (h[i]-Y_train[i])**2
+#cost function: .5 * the sum of squares between the prediction and the actual value
+def J():
+    returnVal = 0
+    for i in range(len(X_train[0])):
+        returnVal += ( h(i) - Y_train[i]) ** 2
+    return returnVal * .5
 
-n_samples, n_features = 10, 5
-rng = np.random.RandomState(0)
-y = rng.randn(n_samples)
-X = rng.randn(n_samples, n_features)
-clf = SGDRegressor(max_iter=1000, tol=1e-3)
-clf.fit(X, y)
-print("coefficient: ",clf.coef_)
-print("intercept: ",clf.fit_intercept)
+#goal is to minimize J()
+#
+
+#using sklearn libraries
+
+#n_samples, n_features = 10, 5
+#rng = np.random.RandomState(0)
+#y = rng.randn(n_samples)
+#X = rng.randn(n_samples, n_features)
+#clf = SGDRegressor(max_iter=1000, tol=1e-3)
+#clf.fit(X, y)
+#print("coefficient: ",clf.coef_)
+#print("intercept: ",clf.fit_intercept)
