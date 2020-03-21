@@ -39,14 +39,3 @@ while(not convergence):
             tempSum += Y_train[i]-h[i]
         
         newThetaJVal + learningRate * tempSum * X_train[j][i] #apply learning rate * sum * simplified derivative
-
-#using sklearn libraries
-
-#n_samples, n_features = 10, 5
-#rng = np.random.RandomState(0)
-#y = rng.randn(n_samples)
-#X = rng.randn(n_samples, n_features)
-#clf = SGDRegressor(max_iter=1000, tol=1e-3)
-#clf.fit(X, y)
-#print("coefficient: ",clf.coef_)
-#print("intercept: ",clf.fit_intercept)
