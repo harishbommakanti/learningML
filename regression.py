@@ -1,6 +1,7 @@
 from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 import numpy as np
 
 n_samples, n_features = 10, 5
@@ -8,6 +9,13 @@ rng = np.random.RandomState(0) #something to give random numbers
 y = rng.randn(n_samples) #an array with 10 random samples between 0 and 1
 x = rng.randn(n_samples, n_features) #a 2D array with 10 subarrays (features) with 5 rand floats each
 x_predict = rng.randn(n_samples,n_features)
+
+#regular linear regression
+clf = LinearRegression(fit_intercept=True)
+clf.fit(x,y)
+clf.predict(x_predict)
+#print(clf.coef_)
+
 
 # using stochastic gradient descent to fit the data
 clf = SGDRegressor(max_iter=1000, tol=1e-3)
