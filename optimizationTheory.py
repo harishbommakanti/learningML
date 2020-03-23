@@ -1,10 +1,11 @@
 from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import SGDClassifier
 import numpy as np
+import math
 
 #batch gradient descent
 X_train = np.array([[1,1,1,1,1],[2104,1600,2400,1416,3000], [3,3,3,2,4]]) #using living area as X_1, # bedrooms for X_2. X_0 is defined as the 1 vector
-Y_train = np.array([400,330,369,232,540]) #using cost as Y for example
+Y_train = np.array([400,330,369]) #using cost as Y for example
 X_predict = np.array([[1500,2500,4000,1200,6000],[1,2,3,4,5]]) #rando variables
 
 
@@ -39,3 +40,34 @@ while(not convergence):
             tempSum += Y_train[i]-h[i]
         
         newThetaJVal + learningRate * tempSum * X_train[j][i] #apply learning rate * sum * simplified derivative
+
+
+#Newton's Method: find where f'(theta) = 0
+# initialize theta_0 to 0: theta_t+1 = theta_t + l'(theta_x) / l''(theta_x)
+
+#l(theta) is the log of L(theta), the likelihood that the model works. so you need to maximize l(theta) to maximize h(theta)
+def l():
+    returnVal=0
+    for i in range(len(Y_train)):
+        prediction = h(i)
+        returnVal += Y_train[i]*math.log10(prediction) + (1-Y_train[i])*math.log10(prediction)
+
+newton_theta = np.zeroes(len(X_train[0])) #initialize all entries in theta vector to 0
+def lFirstDerivative(j): #first derivative of l is the sum from i=1 to m of (y^(i) - h(x^(i))) * x_j ^ (i)
+    returnVal = 0
+    for i in range(len(X_train)):
+        intermediateSum = Y_train[i] - h(i)
+        returnVal += X_train[j][i] * intermediateSum
+    return returnVal
+
+def lSecondDerivative(): #too tired to figure this out haw
+    return 8
+
+#now, need to maximize the log of the likelihood function using newton's method
+def newtonMethod():
+    iterations = 12 #12 is usually good, every run through doubles the num of sig figs
+    for i in range(1,iterations): #theta_0 is initialized as 0
+        for j in range(len(newton_theta)-1):
+            newton_theta[j+1] = newton_theta[j] - (lFirstDerivative(j) / lSecondDerivative())
+    
+    return newton_theta
