@@ -2,10 +2,11 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-n_samples, n_features = 10, 5
+n_samples, n_features = 6, 2
 rng = np.random.RandomState(0) #something to give random numbers
 y = rng.randn(n_samples) #an array with 10 random samples between 0 and 1
 x = rng.randn(n_samples, n_features) #a 2D array with 10 subarrays (features) with 5 rand floats each
@@ -21,8 +22,7 @@ clf.predict(x_predict)
 # using stochastic gradient descent to fit the data
 clf = SGDRegressor(max_iter=1000, tol=1e-3)
 clf.fit(x, y)
-clf.predict(x_predict)
-#print("coefficient: ",clf.coef_)
+#print("coefficient: ",clf.predict(x_predict))
 #print("intercept: ",clf.fit_intercept)
 
 
@@ -33,16 +33,23 @@ clf = LogisticRegression(penalty='l2',max_iter=4000)
 clf.fit(x,y)
 
 x_predict = np.random.randint(50, size=(10,5))
-clf.predict(x_predict)
-#print("coefficient: ",clf.coef_)
+#print("coefficient: ",clf.predict(x_predict))
 #print("score: ",clf.score)
 
 # logistic regression is also capable of handling multinomial (multi class) classification problems
 clf = LogisticRegression(penalty='l2',multi_class='multinomial',max_iter=4000)
 x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=.33,random_state=42)
 clf.fit(x_train,y_train)
-clf.predict(x_test)
-print("x",x)
-print("y",y)
-print("test results",clf.coef_)
-print("y",y_test)
+#print("test results",clf.predict(x_test))
+#print("y",y_test)
+
+
+#gaussian discriminant analysis: a Generative learning algorithm
+#which assumes p(x|y) is gaussian alongside bernoulli random variables
+#(implying p(y|x) is logistic). advantage is that it uses less data, but logistic is more robust
+
+GDA = LinearDiscriminantAnalysis()
+x_train, x_test, y_train, y_test = train_test_split(x,y,random_state=42)
+GDA.fit(x,y)
+print('test results: ',GDA.predict(x_test))
+print("actual: ",y_test)
