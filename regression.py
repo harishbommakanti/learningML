@@ -2,6 +2,7 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 import numpy as np
 
 n_samples, n_features = 10, 5
@@ -35,3 +36,13 @@ x_predict = np.random.randint(50, size=(10,5))
 clf.predict(x_predict)
 #print("coefficient: ",clf.coef_)
 #print("score: ",clf.score)
+
+# logistic regression is also capable of handling multinomial (multi class) classification problems
+clf = LogisticRegression(penalty='l2',multi_class='multinomial',max_iter=4000)
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=.33,random_state=42)
+clf.fit(x_train,y_train)
+clf.predict(x_test)
+print("x",x)
+print("y",y)
+print("test results",clf.coef_)
+print("y",y_test)
