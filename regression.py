@@ -69,3 +69,9 @@ bernNB = BernoulliNB(binarize=True)
 bernNB.fit(x_train,y_train)
 #print("test results: ",bernNB.predict(x_test))
 #print("actual: ",y_test)  #not accurate at all, random data probably isn't meant for bernoulli distributions
+
+from sklearn.naive_bayes import MultinomialNB
+multiNB = MultinomialNB()
+multiNB.fit(x_train,y_train)
+#print("test results: ",multiNB.predict(x_test))
+#print("actual: ",y_test)   # results are again, trash, probably need actual labeled data
