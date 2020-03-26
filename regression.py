@@ -75,3 +75,17 @@ multiNB = MultinomialNB()
 multiNB.fit(x_train,y_train)
 #print("test results: ",multiNB.predict(x_test))
 #print("actual: ",y_test)   # results are again, trash, probably need actual labeled data
+
+
+
+# Support Vector Machines (SVMs): Use the idea of functional and geometric margins to generate the seperating hyperplane
+#(decision boundary between 2 different classes)
+from sklearn import svm
+clf = svm.SVC()
+x_train = [[0,0],[0,1],[1,0],[2,2]]
+y_train = [0,0,1,0]
+x_test = [[3,3],[3,4],[3,5],[5,3]]
+y_test = [1,1,1,1]
+clf.fit(x_train,y_train)
+#print("tested: ",clf.predict(x_test)) #didn't work too well, but good for just implementing it
+#print("actual: ",y_test)
