@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 randomNumGen = np.random
 
@@ -23,17 +24,44 @@ x = randomNumGen.uniform(-5,5,[1,5000])
 
 
 #plotting 2 functions on the same figure
-fig, axes = plt.subplots(2)
-x = np.linspace(0,2*np.pi,400)
-axes[0].plot(x,np.sin(x**2))
-axes[1].plot(x,bellCurve(x))
-fig.suptitle("vertically stacked plots")
+#fig, axes = plt.subplots(2)
+#x = np.linspace(0,2*np.pi,400)
+#axes[0].plot(x,np.sin(x**2))
+#axes[1].plot(x,bellCurve(x))
+#fig.suptitle("vertically stacked plots")
 #plt.show()
 
 #plotting 4 functions in the same image
-fig, axes = plt.subplots(2,2)
-axes[0,0].plot(x,x)
-axes[1,1].plot(x,x**2)
-axes[0,1].plot(x,bellCurve(x))
-axes[1,0].plot(x**3,x)
+#fig, axes = plt.subplots(2,2)
+#axes[0,0].plot(x,x)
+#axes[1,1].plot(x,x**2)
+#axes[0,1].plot(x,bellCurve(x))
+#axes[1,0].plot(x**3,x)
 #plt.show() 
+
+
+# show newton's method to find where x_squared=0
+x = np.linspace(-10,10,400)
+plt.plot(x,x**2)
+
+def line(m,x,b):
+    return m*x + b;
+
+def show_newtons_method():
+    x_guess = random.uniform(-10,10)
+    for i in range(4):
+        #show dotted line between x_guess and the function
+        plt.axvline(x=x_guess,ymin=-500,ymax=x_guess**2,c='g')
+        
+        f_x_guess = x_guess**2
+        f_prime_x_guess = 2*x_guess #derivative of x^2 is 2x
+
+        #draw line at that slope with that point
+        #y = mx + b => b = y - mx = f_x_guess - f_prime_x_guess*x_guess
+        plt.plot(x,line(f_prime_x_guess,x,f_x_guess - f_prime_x_guess*x_guess),'-r')
+
+        #update x: new_x = x_guess - f(x_guess)/f'(x_guess)
+        x_guess = x_guess - f_x_guess/f_prime_x_guess
+    plt.show()
+
+show_newtons_method()
