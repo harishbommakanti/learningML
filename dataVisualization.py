@@ -46,7 +46,7 @@ x = np.linspace(-10,10,400)
 #plt.plot(x,x**2)
 
 def line(m,x,b):
-    return m*x + b;
+    return m*x + b
 
 def show_newtons_method():
     x_guess = random.uniform(-10,10)
@@ -68,10 +68,8 @@ def show_newtons_method():
 #show_newtons_method()
 
 
-def do_company_sales_visualizations():
+def company_sales_visualizations_simple_line():
     #read from csv and show some graphs based on that
-    company_data = pd.read_csv("company_sales_data.csv")
-    month_list = company_data["month_number"].tolist()
     profit_list = company_data["total_profit"].tolist()
 
     #showing 1 simple line on the graph
@@ -81,6 +79,25 @@ def do_company_sales_visualizations():
     plt.legend(loc='lower right')
     plt.xticks(month_list)
     plt.yticks([100000, 200000, 300000, 400000, 500000])
+    #plt.show()
+
+def company_sales_visualizations_all_data_lines():
+    #show all data from the dataframe on the graph
+    for i in range(1,len(company_data.columns)-2):
+        col_label = company_data.columns[i]
+        print(col_label)
+        data = company_data[col_label]
+
+        plt.plot(month_list,data.tolist(),label=col_label + " Sales Data",marker='o',linewidth='3')
+    plt.xlabel("Month numbers")
+    plt.ylabel("Sales units in numbers")
+    plt.legend(loc='upper left')
+    plt.title("Sales data")
+    plt.xticks(np.linspace(1,12,12))
     plt.show()
 
-do_company_sales_visualizations()
+      
+company_data = pd.read_csv("company_sales_data.csv")
+month_list = company_data["month_number"].tolist()
+#company_sales_visualizations_simple_line()
+company_sales_visualizations_all_data_lines()
