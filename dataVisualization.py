@@ -96,8 +96,30 @@ def company_sales_visualizations_all_data_lines():
     plt.xticks(np.linspace(1,12,12))
     plt.show()
 
+def company_sales_visualizations_specifc_scatterplot(label):
+    col_data = company_data[label]
+    plt.scatter(month_list,col_data,color='blue',marker='o')
+    plt.grid(True,linewidth=1,linestyle='--')
+    plt.show()
+
+def company_sales_visualizations_compare_bar_charts(prod1,prod2):
+    prod1_col = company_data[prod1]
+    prod2_col = company_data[prod2]
+
+    plt.bar([a-.25 for a in month_list],prod1_col,width=.25,label=prod1 + " sales data", align='edge')
+    plt.bar([a+.25 for a in month_list],prod2_col,width=-.25,label=prod2 + " sales data", align='edge')
+    plt.grid(True,linewidth=1,linestyle='--')
+    plt.show()
+
+def company_sales_visualizations_histogram():
+    profit_data = company_data['total_profit']
+    plt.hist(profit_data)
+    plt.show()
       
 company_data = pd.read_csv("company_sales_data.csv")
 month_list = company_data["month_number"].tolist()
 #company_sales_visualizations_simple_line()
-company_sales_visualizations_all_data_lines()
+#company_sales_visualizations_all_data_lines()
+#company_sales_visualizations_specifc_scatterplot("toothpaste")
+#company_sales_visualizations_compare_bar_charts("facecream","facewash")
+company_sales_visualizations_histogram()
