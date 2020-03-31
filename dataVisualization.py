@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import random
 
 randomNumGen = np.random
@@ -42,7 +43,7 @@ x = randomNumGen.uniform(-5,5,[1,5000])
 
 # show newton's method to find where x_squared=0
 x = np.linspace(-10,10,400)
-plt.plot(x,x**2)
+#plt.plot(x,x**2)
 
 def line(m,x,b):
     return m*x + b;
@@ -64,4 +65,22 @@ def show_newtons_method():
         x_guess = x_guess - f_x_guess/f_prime_x_guess
     plt.show()
 
-show_newtons_method()
+#show_newtons_method()
+
+
+def do_company_sales_visualizations():
+    #read from csv and show some graphs based on that
+    company_data = pd.read_csv("company_sales_data.csv")
+    month_list = company_data["month_number"].tolist()
+    profit_list = company_data["total_profit"].tolist()
+
+    #showing 1 simple line on the graph
+    plt.plot(month_list,profit_list,label="Profit data of last year",color='red',marker='o',markerfacecolor='k',linestyle='--',linewidth='3')
+    plt.xlabel('Month Number')
+    plt.ylabel('Profit in dollars')
+    plt.legend(loc='lower right')
+    plt.xticks(month_list)
+    plt.yticks([100000, 200000, 300000, 400000, 500000])
+    plt.show()
+
+do_company_sales_visualizations()
