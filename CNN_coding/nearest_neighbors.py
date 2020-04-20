@@ -71,3 +71,19 @@ def cross_validation():
 
         # keep track of what works on the validation set
         validation_accuracies.append((k, acc))
+
+def run_sklearn_neighbors():
+    from sklearn.neighbors import NearestNeighbors #the normie, not very effective one
+    x = np.array(np.random.randn(100,2)+50)
+    y = np.array(np.random.randn(100,2)+40) #two datasets that nearest neighbors compares have to have same size, not like regression
+
+    clf = NearestNeighbors(n_neighbors=2,algorithm='ball_tree')
+    clf.fit(x)
+    distances,indices = clf.kneighbors(x) #distances of 0 as it compares itself
+    distances,indices = clf.kneighbors(y)
+    print("x: ",x[0:20])
+    print("y: ",y[0:20])
+    print("indices: ",indices)
+    print("distances: ",distances)
+
+run_sklearn_neighbors()
