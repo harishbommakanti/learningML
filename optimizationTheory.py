@@ -76,8 +76,6 @@ def TryToDoItMyself():
 
 #tryToDoItMyself()
 
-
-#https://towardsdatascience.com/gradient-descent-in-python-a0d07285742f , props to this person for helping
 #doing gradient descent in actual python/numpy, using stuff like np.dot
 x = 2*np.random.rand(100,1) #100 points between 0 and 2, one single vector
 y = 4 + 3*x + np.random.randn(100,1) #100 pts between 1 and 7, one single vector
@@ -136,7 +134,7 @@ def plot_GD(n_iter,lr,ax,ax1=None):
      """
      _ = ax.plot(x,y,'b.')
      theta = np.random.randn(2,1)
-     x_b = np.c_[np.ones((len(X),1)),X]
+     x_b = np.c_[np.ones((len(x),1)),x]
 
      tr =0.1
      cost_history = np.zeros(n_iter)
