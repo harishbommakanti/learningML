@@ -76,6 +76,8 @@ def TryToDoItMyself():
 
 #tryToDoItMyself()
 
+
+#https://towardsdatascience.com/gradient-descent-in-python-a0d07285742f , props to this person for helping
 #doing gradient descent in actual python/numpy, using stuff like np.dot
 x = 2*np.random.rand(100,1) #100 points between 0 and 2, one single vector
 y = 4 + 3*x + np.random.randn(100,1) #100 pts between 1 and 7, one single vector
@@ -152,6 +154,29 @@ def plot_GD(n_iter,lr,ax,ax1=None):
      if not ax1== None:
         _ = ax1.plot(range(n_iter),cost_history,'b.')
 
+#run as they appear in the input vector, good for large datasets as convergence doesnt require u going over all the data
+def stochasticGradientDescent(x,y,theta,alpha,iterations):
+    m = len(y)
+    cost_history = np.zeros(iterations)
+    
+    #choose a random sample m times, do that iteration times
+    for it in range(iterations):
+        cost =0.0
+        for i in range(m):
+            rand_ind = np.random.randint(0,m) #choose a random sample between 0 and m
+            X_i = x[rand_ind,:].reshape(1,x.shape[1]) #choose that x_i
+            y_i = y[rand_ind].reshape(1,1) #choose that y_i
+            prediction = np.dot(X_i,theta) #choose that x_i
+
+            theta = theta -(1/m)*alpha*( X_i.T.dot((prediction - y_i))) #do the same step, but over that one sample only
+            cost += cost(theta,X_i,y_i)
+        cost_history[it]  = cost
+    
+    print(theta[0],theta[1])
+    return theta, cost_history
+
+
 runGradientDescent()
 closedFormGradDescent()
+stochasticGradientDescent()
 #seem to work out for linear equations
