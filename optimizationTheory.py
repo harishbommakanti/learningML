@@ -124,6 +124,34 @@ def closedFormGradDescent():
     theta =  np.linalg.inv(x_b.T.dot(x_b)).dot(x_b.T).dot(y)
     print(theta[0][0],theta[1][0])
 
+def plot_GD(n_iter,lr,ax,ax1=None):
+     """
+     n_iter = no of iterations
+     lr = Learning Rate
+     ax = Axis to plot the Gradient Descent
+     ax1 = Axis to plot cost_history vs Iterations plot
+
+     """
+     _ = ax.plot(x,y,'b.')
+     theta = np.random.randn(2,1)
+     x_b = np.c_[np.ones((len(X),1)),X]
+
+     tr =0.1
+     cost_history = np.zeros(n_iter)
+     for i in range(n_iter):
+        pred_prev = x_b.dot(theta)
+        theta,h,_ = gradientDescent(x_b,y,theta,lr,1)
+        pred = x_b.dot(theta)
+
+        cost_history[i] = h[0]
+
+        if ((i % 25 == 0) ):
+            _ = ax.plot(x,pred,'r-',alpha=tr)
+            if tr < 0.8:
+                tr = tr+0.2
+     if not ax1== None:
+        _ = ax1.plot(range(n_iter),cost_history,'b.')
+
 runGradientDescent()
 closedFormGradDescent()
 #seem to work out for linear equations
