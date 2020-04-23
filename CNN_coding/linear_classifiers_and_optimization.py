@@ -14,6 +14,7 @@ def SVM_L_i_vectorized(x,y,W):
 #prediction weights W
 def Softmax_L_vectorized(x,y,W):
     scores = W.dot(x) #classic example of a score function
+    scores -= np.max(scores) #to avoid blowup due to log of a negative
     scores = np.exp(scores) #exponentiate each term
     scores = scores/np.sum(scores) #normalize each term
     L = -np.log(scores) #take the log
@@ -30,3 +31,52 @@ def test_loss():
     print("Softmax loss: ",Softmax_L_vectorized(x,y,W)[0])
 
 test_loss()
+
+def Loss(x,y,W):
+    totalLoss = 0
+    for i in range(len(y)):
+        totalLoss += Softmax_L_vectorized(x,i,W)
+    return totalLoss
+
+#optimization
+
+#very bad idea, random search for gradient descent
+def randSearch():
+    x_train = np.random.randn(10,1)
+    y_train = np.random.randn(4,1)
+
+    bestloss = float("inf")
+    for num in range(1000):
+        W = np.random.randn(10,3073)*0.0001 #random direction --> BAD
+        loss = Loss(x_train,y_train,W)
+        if loss < bestloss:
+            bestloss = loss
+            bestW = W
+
+#a naive way to evaluate gradient by using limit definition of derivative
+def eval_numerical_gradient(f, x):
+    """
+    a naive implementation of numerical gradient of f at x
+    - f should be a function that takes a single argument
+    - x is the point (numpy array) to evaluate the gradient at
+    """
+
+    fx = f(x) # evaluate function value at original point
+    grad = np.zeros(x.shape)
+    h = 0.00001
+
+    # iterate over all indexes in x
+    it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
+    while not it.finished:
+        # evaluate function at x+h
+        ix = it.multi_index
+        old_value = x[ix]
+        x[ix] = old_value + h # increment by h
+        fxh = f(x) # evalute f(x + h)
+        x[ix] = old_value # restore to previous value (very important!)
+
+        # compute the partial derivative
+        grad[ix] = (fxh - fx) / h # the slope
+        it.iternext() # step to next dimension
+
+    return grad
