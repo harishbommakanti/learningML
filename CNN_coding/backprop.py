@@ -97,3 +97,37 @@ def matrix_multiplication_backprop_ex():
     #its the same type of thing for multiplication regularly, gradient switching
 
     #USE DIMENSION ANALYSIS: check if d_ has same shape as _, the Jacobian should
+
+
+#modularized gate and computational graph from the slides listed below
+#just really rough implementations and their analog to real world deep learning frameworks, not really syntactically accurate
+
+class ComputationalGraph(object):
+	def forward(inputs):
+		#1: [pass inputs to input gates]
+		#2: forward through the comp. graph
+		for gate in self.graph.nodes_topologically_sorted():
+			gate.forward()
+		return loss #final gate in graph outputs the loss
+
+	def backward():
+		for gate in reversed(self.graph.nodes_topologically_sorted()):
+			gate.backward() #little piece of back prop (chain rule applied)
+		return inputs_gradients
+
+	#keep in mind gate.backward() =/= ComputationalGraph.backward(),
+	# in this model, gates are like inner objects of the whole graph.
+	# no recursion going on here
+
+class MultiplyGate(object):
+    def forward(x,y):
+        z = x*y
+        self.x = x #caching the values to not lose them
+        self.y = y
+        return z #makes sense, just return the value
+
+    #following is the partial L/partial z, given the most recent gradient dz from the right (in backprop)	
+    def backward(dz):
+            dx = self.y * dz #[dz/dx * dL/dz] scaling it by values of other branch like gradient switching, remember
+            dy = self.x * dz #[dz/dy * dL/dz]
+            return [dx,dy] #has [partial L/partial x, partial L/partial y]
