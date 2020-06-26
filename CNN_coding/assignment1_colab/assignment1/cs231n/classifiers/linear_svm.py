@@ -32,17 +32,24 @@ def svm_loss_naive(W, X, y, reg):
         correct_class_score = scores[y[i]]
         for j in range(num_classes):
             if j == y[i]:
-                continue
+              continue
             margin = scores[j] - correct_class_score + 1 # note delta = 1
             if margin > 0:
-                loss += margin
+              #there is loss
+              #look at notion notes, derivation is there
+              #since loss is W^Tx, dLoss = x. so if theres a margin, all pts of the gradient vector -= the curr X[i]
+              dW[:,y[i]] -= X[i]
+              dW[:,j] -= X[i]
+              loss += margin
 
     # Right now the loss is a sum over all training examples, but we want it
     # to be an average instead so we divide by num_train.
     loss /= num_train
+    dW /= num_train
 
     # Add regularization to the loss.
     loss += reg * np.sum(W * W)
+    dW += reg * W #also look back through notion notes
 
     #############################################################################
     # TODO:                                                                     #
@@ -54,7 +61,7 @@ def svm_loss_naive(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     
@@ -77,8 +84,21 @@ def svm_loss_vectorized(W, X, y, reg):
     # result in loss.                                                           #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    num_train = X.shape[0]
 
-    pass
+    scores = X.dot(W)
+    #np.arange is basically indices, y is the correct label index --> get the score at each index for 0..numTrain
+    correct_class_score = scores[np.arange(num_train), y]
+
+    #correct_class_score is now of shape N
+    #correct_class_score[:,np.newaxis] makes it into a Nx1 vector
+    margins = np.maximum(0, scores - correct_class_score[:, np.newaxis] + 1)
+    margins[np.arange(num_train), y] = 0 #ignore loss of correct labels
+    loss = np.sum(margins)
+    
+    #regularization
+    loss /= num_train
+    loss += 0.5 * reg * np.sum(W.T.dot(W))
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -93,7 +113,15 @@ def svm_loss_vectorized(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    #since loss is W^Tx, dLoss = x. so if theres a margin, all pts of the gradient vector -= the curr X[i]
+    X_mask = np.zeros(margins.shape) #a temp array basically
+    X_mask[margins > 0] = 1 #basically a piecewise function now, only 0 or 1 in X_mask
+
+    count = np.sum(X_mask, axis=1) #count counts up the # of 1s, or datapoints with lots of loss
+    X_mask[np.arange(num_train), y] = -count #subtract the number of counts
+    dW = X.T.dot(X_mask)
+    dW /= num_train
+    dW += np.multiply(W, reg)
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 

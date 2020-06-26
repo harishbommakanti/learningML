@@ -77,9 +77,9 @@ class KNearestNeighbor(object):
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-                dists[i][j] = np.sqrt(np.sum(np.square(X[i] - self.X_train[j,:]))
-
+                dists[i][j] = np.sqrt(np.sum(np.square(X[i] - self.X_train[j,:])))
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        
         return dists
 
     def compute_distances_one_loop(self, X):
