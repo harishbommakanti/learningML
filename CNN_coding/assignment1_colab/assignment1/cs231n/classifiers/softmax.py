@@ -32,8 +32,29 @@ def softmax_loss_naive(W, X, y, reg):
     # regularization!                                                           #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    num_train = X.shape[0]
+    num_classes = W.shape[1]
 
-    pass
+    for i in range(num_train):
+      curr = X[i].dot(W) #dimensions of 1xC, a row vector representing class scores for 1 example, good
+      curr -= np.max(curr)
+
+      correct_class = curr[y[i]]
+      denominator = np.sum(np.exp(curr))
+      loss += -np.log(np.exp(correct_class) / denominator)
+
+      #now need to compute gradient over each class c for the current example
+      for c in range(num_classes):
+          if c == y[i]:
+              dW[:, c] += (np.exp(curr[c]) / denominator - 1) * X[i]
+          else:
+              dW[:, c] += (np.exp(curr[c]) / denominator) * X[i]
+
+    loss /= num_train
+    loss += 0.5 * reg * np.sum(W * W)
+
+    dW /= num_train
+    dW += reg * W
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -57,9 +78,23 @@ def softmax_loss_vectorized(W, X, y, reg):
     # regularization!                                                           #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    num_train = X.shape[0]
+    num_classes = W.shape[1]
+    
+    preds = X.dot(W)
+    preds = preds - np.amax(preds, axis=1)[:,np.newaxis]
 
-    pass
-
+    loss = -np.sum(
+        np.log(np.exp(preds[np.arange(num_train), y]) / np.sum(np.exp(preds), axis=1)))
+    
+    loss /= num_train
+    loss += 0.5 * reg * np.sum(W * W)
+    
+    ind = np.zeros_like(preds)
+    ind[np.arange(num_train), y] = 1
+    dW = X.T.dot(np.exp(preds) / np.sum(np.exp(preds), axis=1, keepdims=True) - ind)
+    dW /= num_train
+    dW += reg * W
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     return loss, dW
