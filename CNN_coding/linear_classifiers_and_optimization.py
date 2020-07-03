@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 #the loss of each class given input x, correct class label index y, prediction weights W
 #for the multi class SVM loss function
@@ -80,3 +81,26 @@ def eval_numerical_gradient(f, x):
         it.iternext() # step to next dimension
 
     return grad
+
+#different activation functions
+def activation_functions(x,w1,b1,w2,b2,alpha):
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-X))
+    
+    def tanh(x):
+        return math.tanh(x)
+    
+    def ReLU(x):
+        return max(0,x)
+    
+    def leaky_ReLU(x):
+        return max(0.1*x,x)
+    
+    def Maxout(x,w1,b1,w2,b2):
+        return max(np.dot(w1.T,x) + b1,np.dot(w2.T,x)+b2)
+    
+    def ELU(x,alpha):
+        if x>=0:
+            return x
+        else:
+            return alpha * (np.exp(x) - 1)
