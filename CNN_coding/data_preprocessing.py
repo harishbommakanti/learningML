@@ -67,8 +67,52 @@ def PCA(X):
     #can decorrelate data
     Xrot = np.dot(X,U)
 
+    def whitening():
+        Xwhite = Xrot / np.sqrt(S + 1e-5)
+        return Xwhite
 
     #final step of discarding dimensions with negligible variance
     Xrot_reduced = np.dot(X, U[:,:100])
 
     return Xrot_reduced
+
+
+
+#weight initialization
+def init_weights():
+    N = 5000
+    H = 500
+    D = 200
+    W = None
+
+    #bad idea, init weights to 0
+    W = np.zeros(D,H)
+
+    #bad idea, small random numbers -> gradient goes to 0 over time
+    W = 0.01 * np.random.randn(D,H)
+
+    #an idea, calibrate all variances by doing 1/sqrt(n)
+    W = np.random.randn(N) / math.sqrt(N)
+
+
+
+    #best idea, modified xavier initialization along with ReLU units
+    W = np.random.randn(N) * math.sqrt(2/N)
+
+
+
+
+#other forms of regularization to avoid overfitting 
+def regularization(W):
+    
+    def L2(W,lambda_reg):
+        W += 0.5 * lambda_reg * np.sum(W*W)
+        return W
+    
+    def L1(W,lambda_reg):
+        W += lambda_reg * abs(W)
+        return
+    
+    def ElasticNet(W,lambda_reg1,lambda_reg2):
+        W += lambda_reg1 * abs(W) + lambda_reg2 * np.sum(W*W)
+        return W
