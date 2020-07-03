@@ -116,3 +116,59 @@ def regularization(W):
     def ElasticNet(W,lambda_reg1,lambda_reg2):
         W += lambda_reg1 * abs(W) + lambda_reg2 * np.sum(W*W)
         return W
+
+
+#dropout examples for regularization
+def dropout_vanilla():
+    """ Vanilla Dropout: Not recommended implementation (see notes below) """
+
+    p = 0.5 # probability of keeping a unit active. higher = less dropout
+
+    def train_step(X):
+        """ X contains the data """
+        
+        # forward pass for example 3-layer neural network
+        H1 = np.maximum(0, np.dot(W1, X) + b1)
+        U1 = np.random.rand(*H1.shape) < p # first dropout mask
+        H1 *= U1 # drop!
+        H2 = np.maximum(0, np.dot(W2, H1) + b2)
+        U2 = np.random.rand(*H2.shape) < p # second dropout mask
+        H2 *= U2 # drop!
+        out = np.dot(W3, H2) + b3
+        
+        # backward pass: compute gradients... (not shown)
+        # perform parameter update... (not shown)
+    
+    def predict(X):
+        # ensembled forward pass
+        H1 = np.maximum(0, np.dot(W1, X) + b1) * p # NOTE: scale the activations
+        H2 = np.maximum(0, np.dot(W2, H1) + b2) * p # NOTE: scale the activations
+        out = np.dot(W3, H2) + b3
+
+
+#instead od multiplying by p in testtime, divide by p in train time to improve test time
+def inverted_dropout():
+    """ Vanilla Dropout: Not recommended implementation (see notes below) """
+
+    p = 0.5 # probability of keeping a unit active. higher = less dropout
+
+    def train_step(X):
+        """ X contains the data """
+        
+        # forward pass for example 3-layer neural network
+        H1 = np.maximum(0, np.dot(W1, X) + b1)
+        U1 = np.random.rand(*H1.shape) < p # first dropout mask
+        H1 *= U1 # drop!
+        H2 = np.maximum(0, np.dot(W2, H1) + b2)
+        U2 = np.random.rand(*H2.shape) < p # second dropout mask
+        H2 *= U2 # drop!
+        out = np.dot(W3, H2) + b3
+        
+        # backward pass: compute gradients... (not shown)
+        # perform parameter update... (not shown)
+    
+    def predict(X):
+        # ensembled forward pass
+        H1 = np.maximum(0, np.dot(W1, X) + b1) * p # NOTE: scale the activations
+        H2 = np.maximum(0, np.dot(W2, H1) + b2) * p # NOTE: scale the activations
+        out = np.dot(W3, H2) + b3
