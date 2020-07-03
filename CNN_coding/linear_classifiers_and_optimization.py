@@ -104,3 +104,23 @@ def activation_functions(x,w1,b1,w2,b2,alpha):
             return x
         else:
             return alpha * (np.exp(x) - 1)
+
+
+
+#normalization and regularization codes
+def batch_normalization(B):
+    #B is a minibatch array of x1..xm
+    #batch normalization forces the distribution to be gaussian unit variance
+    m = len(B)
+    mu_B = sum(B)/m
+
+    variance_B = sum([(xi - mu_B)**2 for xi in B])
+
+    epsilon = 1e-3
+    normalized_B = [(xi-mu_B)/np.sqrt(variance_B**2 + epsilon) for xi in B]
+
+    gamma = 1e-2
+    beta = 1e-4
+
+    #gamma, beta, and epsilon are parameters to be learned
+    y_B = gamma*normalized_B + beta
